@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 
 
 
+
 public class EyeTrackingExample : MonoBehaviour
 {
     [Header("Gaze calibration settings")]
@@ -65,6 +66,9 @@ public class EyeTrackingExample : MonoBehaviour
     private RaycastHit hit;
     private float distance;
 
+    private Vector3 headset_pos;
+    private Quaternion headset_orient;
+
     void GetDevice()
     {
         InputDevices.GetDevicesAtXRNode(XRNode, devices);
@@ -103,7 +107,19 @@ public class EyeTrackingExample : MonoBehaviour
 
     void Update()
     {
+
+
+
+        headset_pos = this.transform.localPosition;
+        headset_orient = this.transform.localRotation;
+
+
+        //Printing all my values for headset 
+        print("Headset_Pos: " + headset_pos + "headset_Orient: " + headset_orient);
         
+
+
+
         //Requesting gaze calibration with default settings
         if (Input.GetKeyDown(calibrationRequestKey))
         {
@@ -209,8 +225,18 @@ public class EyeTrackingExample : MonoBehaviour
             gazeTarget.transform.LookAt(vrCamera.transform.position, Vector3.up);
             gazeTarget.transform.localScale = Vector3.one * floatingGazeTargetDistance;
         }
-        addRecord(direction, "direction.txt");
-        print("My Gaze" + direction);
+
+
+
+        // Printing all my values
+        print("My Gaze" + direction + "rayOrigin : " + rayOrigin);
+        print("Fixation point: " + fixationPoint.ToString("f10"));
+        print("rayOrigin : " + rayOrigin);
+        print("###########################");
+
+        //Adding my values to my txt file
+        addRecord(rayOrigin, fixationPoint, "20210219_Data_v01.txt");
+
     }
 
     void AddForceAtHitPosition()
@@ -225,15 +251,14 @@ public class EyeTrackingExample : MonoBehaviour
 
 
 
-
-    public static void addRecord(Vector3 direction, string filepath)
+    public static void addRecord(Vector3 rayOrigin, Vector3 fixationPoint, string filepath)
 
     {
         try
         {
             using (System.IO.StreamWriter file = new System.IO.StreamWriter(@filepath, true))
             {
-                file.WriteLine(direction + ",");
+                file.WriteLine( rayOrigin.ToString("f10") + "," + fixationPoint.ToString("f10") + "," + GetTimeStamp());
             }
         }
         catch (Exception ex)
@@ -241,4 +266,12 @@ public class EyeTrackingExample : MonoBehaviour
             throw new ApplicationException("This program did an oopsie : ", ex);
         }
     }
+
+
+    static string GetTimeStamp()
+    {
+        return System.DateTime.Now.ToString();
+    }
 }
+
+
