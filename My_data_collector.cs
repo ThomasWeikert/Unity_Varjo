@@ -21,6 +21,8 @@ public class My_data_collector : MonoBehaviour
         print(headset_pos + ";" + headset_orient);
         addRecord(headset_pos, headset_orient, "cake.txt");
 
+        
+
     }
 
 
@@ -31,7 +33,7 @@ public class My_data_collector : MonoBehaviour
         {
             using (System.IO.StreamWriter file = new System.IO.StreamWriter(@filepath, true))
             {
-                file.WriteLine(headset_pos + "," + headset_orient + "," + GetTimeStamp());
+                file.WriteLine(headset_pos.ToString("f10") + "," + headset_orient.ToString("f10") + "," + GetTimeStamp());
             }
         }
         catch (Exception ex)
