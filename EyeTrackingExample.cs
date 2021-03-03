@@ -10,8 +10,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.IO.Ports;
 
-using UnityEngine.UI;
-using UnityEngine.Events;
+//using UnityEngine.UI;
+//using UnityEngine.Events;
 
 
 
@@ -23,6 +23,7 @@ public class EyeTrackingExample : MonoBehaviour
     //private InputDevice _head;
     //private Transform _headTransform;
 
+    /*
     public Sprite[] spriteList;
     Sprite m_sprite;
     int m_kuva = 0;
@@ -30,10 +31,10 @@ public class EyeTrackingExample : MonoBehaviour
 
     private bool triggerDown;
     //SerialPort arduino;
+    */
 
 
-
-
+    public KeyCode Trigger = KeyCode.RightArrow;
 
     // var device = new InputDevice();
     // var devices = new List<UnityEngine.XR.InputDevice>();
@@ -114,13 +115,14 @@ public class EyeTrackingExample : MonoBehaviour
     private void Start()
     {
 
-        //arduino = new SerialPort("COM6", 9600);
-        //arduino.Open();
+        arduino = new SerialPort("COM6", 9600);
+        arduino.Open();
+        
 
-        triggerDown = true;
-        m_sprite = GetComponent<Sprite>();
-        m_sprite = this.GetComponent<SpriteRenderer>().sprite;
-        array_length = spriteList.Length;
+        //triggerDown = true;
+        //m_sprite = GetComponent<Sprite>();
+        //m_sprite = this.GetComponent<SpriteRenderer>().sprite;
+        //array_length = spriteList.Length;
 
         //Hiding the gazetarget if gaze is not available or if the gaze calibration is not done
         if (VarjoEyeTracking.IsGazeAllowed() && VarjoEyeTracking.IsGazeCalibrated())
@@ -145,17 +147,24 @@ public class EyeTrackingExample : MonoBehaviour
     void Update()
     {
 
-       
+
         /*
         headset_pos = this.transform.localPosition;
         headset_orient = this.transform.localRotation;
         //leftEyeTransform.localPosition = leftEyePosition;
-
         //Printing all my values for headset 
         print("Headset_Pos: " + headset_pos + "headset_Orient: " + headset_orient);
         */
 
+        if (Input.GetKeyDown(Trigger))
+        {
+            print("Right Arrow");
+            print("Right button was pressed at " + Time.timeSinceLevelLoad + " seconds");
+            arduino.Write("1");
+            print("works");
+        }
 
+        //print("test");
 
         //Requesting gaze calibration with default settings
         if (Input.GetKeyDown(calibrationRequestKey))
@@ -281,7 +290,16 @@ public class EyeTrackingExample : MonoBehaviour
             gazeTarget.transform.localScale = Vector3.one * floatingGazeTargetDistance;
         }
 
-        bool triggerValue;
+
+        /*
+        if (input.GetKey(Keycode.A))
+        {
+            print("You got it");
+        }
+        */
+
+
+        /*
         if (Input.GetKeyDown(KeyCode.RightArrow))
         {
             print("Right button was pressed at " + Time.timeSinceLevelLoad + " seconds");
@@ -295,7 +313,7 @@ public class EyeTrackingExample : MonoBehaviour
             //arduino.Write("1");
             print("works");
         }
-
+        */
 
         // Printing all my values
         //print("My Gaze" + direction + "rayOrigin : " + rayOrigin);
@@ -346,5 +364,3 @@ public class EyeTrackingExample : MonoBehaviour
         return System.DateTime.Now.ToString("MM/dd/yyyy hh:mm:ss.fff tt");
     }
 }
-
-
